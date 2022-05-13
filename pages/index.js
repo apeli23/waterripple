@@ -1,16 +1,27 @@
 import React, { useEffect, useRef } from "react";
-import * as PIXI from 'pixi.js'
+import * as PIXI from 'pixi.js';
 
 
 export default function Home() {
-  let app, image, displacementSprite, displacementFilter;
+  let original, app, image, displacementSprite, displacementFilter, processedImage, animationID,finalCanvas;
+  const [userprofile, takeScreenshot] = useScreenshot();
+  const processedRef = useRef();
 
   useEffect(() => {
-    app = new PIXI.Application({ width: window.innerWidth, height: window.innerHeight });
-    document.body.appendChild(app.view);
+
+  }, [])
+
+
+  const startAnimation = () => {
+    processedImage = processedRef.current;
+    original = document.getElementById('image')
+    // console.log(original.width, original.height)
+    app = new PIXI.Application({ width: original.width, height: original.height, forceCanvas: true });
+    processedImage.appendChild(app.view);
     image = new PIXI.Sprite.from("https://res.cloudinary.com/dogjmmett/image/upload/v1652412717/template_vowego.jpg");
-    image.width = window.innerWidth;
-    image.height = window.innerHeight;
+    image.width = original.width;
+    image.height = original.height;
+    // console.log(app.view)
     app.stage.addChild(image);
 
     displacementSprite = new PIXI.Sprite.from("https://res.cloudinary.com/dogjmmett/image/upload/v1652411299/cloud_eg89xa.png");
@@ -19,17 +30,38 @@ export default function Home() {
     app.stage.addChild(displacementSprite);
     app.stage.filters = [displacementFilter];
 
-    animate();      
-  })
+    animate();
+  }
 
   function animate() {
     displacementSprite.x += 10;
     displacementSprite.y += 4;
-    requestAnimationFrame(animate);
+    animationID = requestAnimationFrame(animate);
+    finalCanvas = app.view.toDataURL()
+
+  }
+
+
+  const stopAnimation = () => {
+    cancelAnimationFrame(animationID)
+    console.log(finalCanvas)
   }
   return (
-    <div>
-      <h1>Works</h1>
+    <div className="container">
+      <div className="navbar">
+        <h1>WaterRipple Effect in nextjs</h1>
+        <button onClick = {startAnimation}>Start water ripple</button>
+        <button onClick = {stopAnimation}>Stop water ripple</button>
+        {/* <button onClick={uploadHandler}>Upload Sample</button> */}
+      </div>
+      <div className="row">
+        <div className="column">
+          <img id="image" src="https://res.cloudinary.com/dogjmmett/image/upload/v1652412717/template_vowego.jpg" alt="fish" />
+        </div>
+        <div id="column2">
+          <div ref={processedRef} className="processed" />
+        </div>
+      </div>
     </div>
   )
-}
+};
