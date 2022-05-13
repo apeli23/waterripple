@@ -32,6 +32,9 @@ Use [Link](https://cloudinary.com/console) to log in or create your Cloudinary a
 
 In your project root directory, create a new file named `.env.local` and use the following guide to fill your variables.
 ```
+"pages/api/upload.js"
+
+
 CLOUDINARY_CLOUD_NAME =
 
 CLOUDINARY_API_KEY = 
@@ -47,6 +50,9 @@ Create a directory `pages/api/upload.js`.
 Configure the environment keys and libraries to avoid code duplication.
 
 ```
+"pages/api/upload.js"
+
+
 var cloudinary = require("cloudinary").v2;
 
 cloudinary.config({
@@ -57,6 +63,9 @@ cloudinary.config({
 ```
 Finally, add a handler function to execute Nextjs post request:
 ```
+"pages/api/upload.js"
+
+
 export default async function handler(req, res) {
     if (req.method === "POST") {
         let url = ""
@@ -93,6 +102,9 @@ import * as PIXI from 'pixi.js';
 Declare the following variables and state hooks. We will use them as we move on
 
 ```
+"pages/index.js"
+
+
   let original, app, image, displacementSprite, displacementFilter, processedImage, animationID,finalCanvas;
   const processedRef = useRef();
   const [link, setLink] = useState();
@@ -101,6 +113,9 @@ Declare the following variables and state hooks. We will use them as we move on
 Paste the following in your return statement. You can finc the css files in the github repository.
 
 ```
+"pages/index.js"
+
+
 return (
     <div className="container">
       <div className="navbar">
@@ -131,6 +146,9 @@ Create the following function named `startAnimation` and begin by refferencing t
 
 
 ```
+"pages/index.js"
+
+
 const startAnimation = () => {
     processedImage = processedRef.current;
     original = document.getElementById('image')
@@ -139,6 +157,9 @@ const startAnimation = () => {
 We can now initialize `Pixi.js` by first creating an application object that will render your scene like renderer, root container and time tracking. We then add the HTML as a canvas to the referenced `processedRef` DOM element.
 
 ```
+"pages/index.js"
+
+
   const startAnimation = () => {
     processedImage = processedRef.current;
     original = document.getElementById('image');
@@ -149,9 +170,12 @@ We can now initialize `Pixi.js` by first creating an application object that wil
   }
 
 ```
-Imntoduce a sprite image.
+Intoduce a sprite image.
 
 ```
+"pages/index.js"
+
+
   const startAnimation = () => {
     processedImage = processedRef.current;
     original = document.getElementById('image');
@@ -173,6 +197,10 @@ The trick to creating the displacement effect is to move the image pixels away f
 
 Create sprite from this image and add a displacement filter from the sprite. Set wrapMode to repeat and displacement to cover the entire image 
 
+ ```
+ "pages/index.js"
+
+
   const startAnimation = () => {
     processedImage = processedRef.current;
     original = document.getElementById('image');
@@ -192,10 +220,14 @@ Create sprite from this image and add a displacement filter from the sprite. Set
     app.stage.filters = [displacementFilter];
  
 }
+```
 
 Add an animation for a better view of the displacement effect and set it on a loop using `requestAnimationFrame` method.
 
 ```
+"pages/index.js"
+
+
 function animate() {
     displacementSprite.x += 10;
     displacementSprite.y += 4;
