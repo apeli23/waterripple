@@ -1,20 +1,16 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef, useState } from "react";
 import * as PIXI from 'pixi.js';
 
 
 export default function Home() {
   let original, app, image, displacementSprite, displacementFilter, processedImage, animationID,finalCanvas;
-  const [userprofile, takeScreenshot] = useScreenshot();
   const processedRef = useRef();
-
-  useEffect(() => {
-
-  }, [])
+  const [link, setLink] = useState();
 
 
   const startAnimation = () => {
     processedImage = processedRef.current;
-    original = document.getElementById('image')
+    original = document.getElementById('image');
     // console.log(original.width, original.height)
     app = new PIXI.Application({ width: original.width, height: original.height, forceCanvas: true });
     processedImage.appendChild(app.view);
@@ -44,7 +40,20 @@ export default function Home() {
 
   const stopAnimation = () => {
     cancelAnimationFrame(animationID)
-    console.log(finalCanvas)
+    try {
+
+      fetch('/api/upload', {
+        method: 'POST',
+        body: JSON.stringify({ data: finalCanvas }),
+        headers: { 'Content-Type': 'application/json' },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setLink(data.data);
+        });
+    } catch (error) {
+      console.error(error);
+    }
   }
   return (
     <div className="container">
@@ -59,6 +68,8 @@ export default function Home() {
           <img id="image" src="https://res.cloudinary.com/dogjmmett/image/upload/v1652412717/template_vowego.jpg" alt="fish" />
         </div>
         <div id="column2">
+        {link?  <a href={link} className="link"><h3>Use Link</h3></a>:<h3 className="link">Link shows here</h3> }<br />
+
           <div ref={processedRef} className="processed" />
         </div>
       </div>
